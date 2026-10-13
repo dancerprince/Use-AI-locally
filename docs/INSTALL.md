@@ -8,12 +8,12 @@ Offline AI runs entirely on your own computer. You start it with one command, an
 
 **Linux / macOS**
 ```sh
-curl -fsSL https://raw.githubusercontent.com/<org>/offline-ai/main/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/dancerprince/Use-AI-locally/main/scripts/install.sh | sh
 ```
 
 **Windows (PowerShell)**
 ```powershell
-irm https://raw.githubusercontent.com/<org>/offline-ai/main/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/dancerprince/Use-AI-locally/main/scripts/install.ps1 | iex
 ```
 
 The installer:
@@ -27,7 +27,7 @@ To install from a downloaded wheel instead: `sh install.sh ./offline_ai-0.1.0-py
 ```sh
 uv tool install offline-ai                 # or: pipx install offline-ai
 uv tool install ./offline_ai-0.1.0-py3-none-any.whl
-uv tool install "git+https://github.com/<org>/offline-ai#subdirectory=backend"  # needs a pre-built UI
+uv tool install "git+https://github.com/dancerprince/Use-AI-locally#subdirectory=backend"  # needs a pre-built UI
 ```
 
 ### Option C: standalone binary

@@ -13,9 +13,9 @@ The sidebar shows a live status badge that pings the local model every 10 s (lat
 
 ```bash
 # Linux / macOS
-curl -fsSL https://raw.githubusercontent.com/<org>/offline-ai/main/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/dancerprince/Use-AI-locally/main/scripts/install.sh | sh
 # Windows (PowerShell)
-irm https://raw.githubusercontent.com/<org>/offline-ai/main/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/dancerprince/Use-AI-locally/main/scripts/install.ps1 | iex
 
 offline-ai          # starts the local server and opens the UI in your browser
 ```
