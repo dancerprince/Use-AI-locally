@@ -1,0 +1,68 @@
+[project]
+name = "offline-ai"
+version = "0.1.0"
+description = "Local-first AI workbench: chat with a local model, plug in MCP servers, connectors and skills."
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.30,<1.0",
+    "httpx>=0.27,<1.0",
+    "pydantic>=2.7,<3.0",
+    "pydantic-settings>=2.3,<3.0",
+    "sqlmodel>=0.0.21,<0.1",
+    "cryptography>=42",
+    "mcp>=1.9,<2.0",
+    "platformdirs>=4.13.0",
+    "typer>=0.27.3",
+]
+
+[project.optional-dependencies]
+postgres = ["asyncpg>=0.29"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.6",
+    "mypy>=1.10",
+    "respx>=0.23.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+offline-ai = "app.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+# The built UI is git-ignored, so declare it as an artifact to ship it in the wheel.
+artifacts = ["app/static/**", "app/catalog.json"]
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["app/static/**"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF"]
+ignore = ["E501", "S101", "B008", "S608", "RUF001", "RUF012"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+warn_unused_ignores = false
+ignore_missing_imports = true
+check_untyped_defs = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]

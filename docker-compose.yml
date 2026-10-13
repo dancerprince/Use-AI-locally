@@ -1,0 +1,20 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    volumes: [ollama:/root/.ollama]
+    # Uncomment for NVIDIA GPUs:
+    # deploy: { resources: { reservations: { devices: [{ driver: nvidia, count: all, capabilities: [gpu] }] } } }
+
+  app:
+    build: .
+    depends_on: [ollama]
+    # Published on loopback only. Set OAI_API_TOKEN before exposing further.
+    ports: ["127.0.0.1:8000:8000"]
+    environment:
+      OAI_MODEL_BASE_URL: http://ollama:11434
+      OAI_ALLOWED_HOSTS: '["localhost","127.0.0.1"]'
+    volumes: [appdata:/data]
+
+volumes:
+  ollama:
+  appdata:
