@@ -30,6 +30,7 @@ format:
 
 build:            ## Build the UI (served by the backend)
 	cd $(FRONTEND) && npm run build
+	rm -rf $(BACKEND)/app/static   # stale bundled UI would shadow frontend/dist
 
 run: build        ## Production-style single process on :8000
 	cd $(BACKEND) && uv run python -m app.main

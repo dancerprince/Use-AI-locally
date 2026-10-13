@@ -104,16 +104,38 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     dist = settings.frontend_dist or _find_frontend()
     if dist.is_dir() and (dist / "index.html").exists():
-        app.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
+        app.mount("/assets", _ImmutableStatic(directory=dist / "assets"), name="assets")
 
         @app.get("/{path:path}", include_in_schema=False)
         async def spa(path: str) -> FileResponse:
             candidate = (dist / path).resolve()
             if path and candidate.is_file() and dist.resolve() in candidate.parents:
-                return FileResponse(candidate)
-            return FileResponse(dist / "index.html")
+                return FileResponse(candidate, headers=_NO_CACHE)
+            # index.html is never cached, so every browser always loads the current bundle.
+            return FileResponse(dist / "index.html", headers={**_NO_CACHE, **_SECURITY})
 
     return app
+
+
+_NO_CACHE = {"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache"}
+_SECURITY = {
+    "Content-Security-Policy": (
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
+        "font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self' ws: wss:; "
+        "object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    ),
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+}
+
+
+class _ImmutableStatic(StaticFiles):
+    """Hashed Vite assets: safe to cache forever, names change on every build."""
+
+    def file_response(self, *args, **kwargs):  # type: ignore[no-untyped-def]
+        resp = super().file_response(*args, **kwargs)
+        resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        return resp
 
 
 def _find_frontend() -> Path:

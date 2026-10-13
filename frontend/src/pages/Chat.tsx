@@ -44,7 +44,10 @@ export function ChatPage({ health }: { health: ModelHealth | null }) {
   useEffect(() => {
     if (!model && health?.models[0]) setModel(health.models[0]);
   }, [health, model]);
-  useEffect(() => bottom.current?.scrollIntoView({ behavior: 'smooth' }), [items]);
+  // Effects must return nothing or a cleanup function — never another value.
+  useEffect(() => {
+    bottom.current?.scrollIntoView?.({ behavior: 'smooth' });
+  }, [items]);
 
   const openSession = async (id: string) => {
     setSessionId(id);

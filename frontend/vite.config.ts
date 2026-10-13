@@ -8,6 +8,8 @@ export default defineConfig(({ mode }) => ({
     // `vite build --mode bundle` writes the UI into the Python package (ships in the wheel).
     outDir: mode === 'bundle' ? '../backend/app/static' : 'dist',
     emptyOutDir: true,
+    // Transpile for all current evergreen browsers (Chrome, Edge, Firefox, Safari 14+).
+    target: ['es2020', 'chrome90', 'edge90', 'firefox90', 'safari14'],
   },
   server: {
     host: '127.0.0.1',
